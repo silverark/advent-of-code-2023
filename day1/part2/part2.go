@@ -1,6 +1,7 @@
 package part2
 
 import (
+	"bitbucket.org/silverark/aoc-2023/pkg/shared"
 	"log"
 	"strconv"
 	"strings"
@@ -47,7 +48,7 @@ func FirstNumber(s string) string {
 }
 
 func LastNumber(s string) string {
-	return findSets(Reverse(s), true)
+	return findSets(shared.Reverse(s), true)
 }
 
 func findSets(s string, flip bool) string {
@@ -64,7 +65,7 @@ func findSets(s string, flip bool) string {
 	wordValue := ""
 	for i, word := range numberWords {
 		if flip {
-			word = Reverse(word)
+			word = shared.Reverse(word)
 		}
 		foundIndex := strings.Index(s, word)
 		if foundIndex != -1 && foundIndex < wordIndex {

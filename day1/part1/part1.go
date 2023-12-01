@@ -1,6 +1,7 @@
 package part1
 
 import (
+	"bitbucket.org/silverark/aoc-2023/pkg/shared"
 	"log"
 	"strconv"
 	"unicode"
@@ -35,13 +36,5 @@ func FirstNumber(s string) string {
 }
 
 func LastNumber(s string) string {
-	for i := len(s); i > 0; i-- {
-
-		r := rune(s[i-1])
-
-		if unicode.IsDigit(r) {
-			return s[i-1 : i]
-		}
-	}
-	return ""
+	return FirstNumber(shared.Reverse(s))
 }
