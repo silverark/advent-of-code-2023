@@ -1,4 +1,4 @@
-package part1
+package part2
 
 import (
 	"bitbucket.org/silverark/aoc-2023/pkg/file"
@@ -10,7 +10,7 @@ func TestProcess(t *testing.T) {
 
 	value := Process(file.GetFile("../input1_test.txt"))
 
-	expect := 8
+	expect := 2286
 	if value != expect {
 		t.Fatalf("Received %v, but expected %v", value, expect)
 	}
