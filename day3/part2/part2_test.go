@@ -1,4 +1,4 @@
-package part1
+package part2
 
 import (
 	"bitbucket.org/silverark/aoc-2023/pkg/file"
@@ -7,15 +7,13 @@ import (
 )
 
 func TestProcess(t *testing.T) {
+	value := process(file.GetFile("../input_test.txt"))
 
-	gameLimit := ColourCount{red: 12, green: 13, blue: 14}
-	value := Process(file.GetFile("../input_test.txt"), gameLimit)
-
-	expect := 8
+	expect := 467835
 	if value != expect {
 		t.Fatalf("Received %v, but expected %v", value, expect)
 	}
 
-	value = Process(file.GetFile("../input.txt"), gameLimit)
+	value = process(file.GetFile("../input.txt"))
 	log.Println("The answer is", value)
 }

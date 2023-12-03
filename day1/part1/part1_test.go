@@ -8,7 +8,7 @@ import (
 )
 
 func TestProcess(t *testing.T) {
-	value := process(file.GetFile("../input1_test.txt"))
+	value := process(file.GetFile("../input_test.txt"))
 
 	expect := 142
 	if value != expect {
