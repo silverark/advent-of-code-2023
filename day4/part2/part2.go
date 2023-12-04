@@ -1,75 +1,45 @@
 package part2
 
 import (
-	"strconv"
+	"slices"
 	"strings"
 )
+
+type Game struct {
+	winners int
+	count   int
+}
 
 func process(input []string) int {
 
 	var cards []Game
 
 	for _, line := range input {
-		winNumbers := make(map[int]bool)
-		ticketNumbers := make(map[int]bool)
-
 		parts := strings.Split(line, "|")
 		winningParts := strings.Split(parts[0], ":")
-		ticketNumberStr := strings.Split(parts[1], " ")
+		ticketNumbers := strings.Fields(parts[1])
+		winNumbers := strings.Fields(winningParts[1])
 
-		winNumbersStr := strings.Split(winningParts[1], " ")
-		for _, ticketNumber := range ticketNumberStr {
-			if ticketNumber == "" {
-				continue
+		winners := 0
+		for _, winNumber := range winNumbers {
+			if slices.Contains(ticketNumbers, winNumber) {
+				winners++
 			}
-			ticketNum, _ := strconv.Atoi(ticketNumber)
-			winNumbers[ticketNum] = true
-		}
-		for _, winNumber := range winNumbersStr {
-			if winNumber == "" {
-				continue
-			}
-			winNum, _ := strconv.Atoi(winNumber)
-			ticketNumbers[winNum] = true
 		}
 
 		cards = append(cards, Game{
-			winNumbers:    winNumbers,
-			ticketNumbers: ticketNumbers,
-			count:         1,
+			count:   1,
+			winners: winners,
 		})
 	}
 
 	// Now calculate the winners and add cards to the list
 	extraCards := 0
 	for i := 0; i < len(cards); i++ {
-		winners := cards[i].Winners()
-		// We need to do this cards[j].count times
-		for cardCount := 0; cardCount < cards[i].count; cardCount++ {
-			for j := i + 1; j <= (i + winners); j++ {
-				if j > len(cards) {
-					continue
-				}
-				cards[j].count++
-				extraCards++
-			}
+		for j := i + 1; j <= (i + cards[i].winners); j++ {
+			cards[j].count += cards[i].count // Adding the card count as that's how many times it's won
+			extraCards += cards[i].count
 		}
 	}
 	return len(cards) + extraCards
-}
-
-type Game struct {
-	winNumbers    map[int]bool
-	ticketNumbers map[int]bool
-	count         int
-}
-
-func (g Game) Winners() int {
-	winners := 0
-	for winNumber, _ := range g.winNumbers {
-		if g.ticketNumbers[winNumber] {
-			winners++
-		}
-	}
-	return winners
 }
