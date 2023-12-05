@@ -1,8 +1,8 @@
 package part1
 
 import (
-	"bitbucket.org/silverark/aoc-2023/pkg/file"
 	"log"
+	"silverark/aoc-2023/pkg/file"
 	"testing"
 )
 

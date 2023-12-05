@@ -1,8 +1,8 @@
 package part2
 
 import (
-	"bitbucket.org/silverark/aoc-2023/pkg/shared"
 	"log"
+	"silverark/aoc-2023/pkg/shared"
 	"strconv"
 	"strings"
 	"unicode"

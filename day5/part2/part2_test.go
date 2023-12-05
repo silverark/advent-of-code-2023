@@ -1,4 +1,4 @@
-package part1
+package part2
 
 import (
 	"log"
@@ -7,14 +7,13 @@ import (
 )
 
 func TestProcess(t *testing.T) {
+	value := process(file.GetFile("../input_test.txt"))
 
-	value := Process(file.GetFile("../input_test.txt"))
-
-	expect := 8
+	expect := 46
 	if value != expect {
 		t.Fatalf("Received %v, but expected %v", value, expect)
 	}
 
-	value = Process(file.GetFile("../input.txt"))
+	value = process(file.GetFile("../input.txt"))
 	log.Println("The answer is", value)
 }

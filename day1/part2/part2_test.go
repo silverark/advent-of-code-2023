@@ -1,9 +1,9 @@
 package part2
 
 import (
-	"bitbucket.org/silverark/aoc-2023/pkg/file"
 	"github.com/stretchr/testify/assert"
 	"log"
+	"silverark/aoc-2023/pkg/file"
 	"testing"
 )
 

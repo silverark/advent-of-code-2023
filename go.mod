@@ -1,4 +1,4 @@
-module bitbucket.org/silverark/aoc-2023
+module silverark/aoc-2023
 
 go 1.21
 
