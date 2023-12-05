@@ -7,15 +7,9 @@ import (
 )
 
 func process(input []string) int {
-	var seeds []int
 	var mapFilters []*MapFilter
-	// Get the seeds
-	seedsPart := strings.Fields(strings.Split(input[0], ":")[1])
-	for _, seed := range seedsPart {
-		seedVal, _ := strconv.Atoi(seed)
-		seeds = append(seeds, seedVal)
-	}
-	// Now build the filters
+
+	// Build the filters
 	for i := 2; i < len(input)-1; i++ {
 		if len(input[i]) == 0 || input[i] == "" {
 			continue
@@ -43,17 +37,18 @@ func process(input []string) int {
 			mapFilters = append(mapFilters, newMapFilter)
 		}
 	}
-	// Get maxInt
 	lowestNum := int(^uint(0) >> 1)
-
 	startFilter := mapFilters[0]
-	for _, seed := range seeds {
-		result := startFilter.Calculate(seed)
+
+	// Get the seeds
+	seedsPart := strings.Fields(strings.Split(input[0], ":")[1])
+	for _, seed := range seedsPart {
+		seedVal, _ := strconv.Atoi(seed)
+		result := startFilter.Calculate(seedVal)
 		if result < lowestNum {
 			lowestNum = result
 		}
 	}
-
 	return lowestNum
 }
 
