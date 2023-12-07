@@ -4,6 +4,7 @@ import (
 	"log"
 	"silverark/aoc-2023/pkg/file"
 	"testing"
+	"time"
 )
 
 func TestProcess(t *testing.T) {
@@ -14,8 +15,10 @@ func TestProcess(t *testing.T) {
 		t.Fatalf("Received %v, but expected %v", value, expect)
 	}
 
+	currentTime := time.Now()
 	value = process(file.GetFile("../input.txt"))
-	log.Println("The answer is", value)
+	completedIn := time.Since(currentTime)
+	log.Println("The answer is", value, "found in", completedIn)
 
 	if value != 37384986 {
 		t.Fatalf("OptimisedFailed")
