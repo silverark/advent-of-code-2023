@@ -65,34 +65,28 @@ func (h *hand) Type() handType {
 		h.handType = TypeTwoPairs
 		return h.handType
 	}
-	// 1 pair
-	if h.freq[0].frequency == 2 {
+	if h.freq[0].frequency == 2 { // 1 pair
 		h.handType = TypeOnePair
 		return h.handType
 	}
-
 	h.handType = TypeHighCard
 	return h.handType
 }
-
 func (h *hand) CalcFreq() {
 	stringMap := make(map[byte]int)
-	lenS := len(h.cards)
-	for i := 0; i < lenS; i++ {
+	for i := 0; i < len(h.cards); i++ {
 		stringMap[h.cards[i]]++
 	}
-	itemArray := make([]cardFreq, 0)
 	for key, value := range stringMap {
 		i := cardFreq{
 			char:      key,
 			frequency: value,
 		}
-		itemArray = append(itemArray, i)
+		h.freq = append(h.freq, i)
 	}
-	sort.Slice(itemArray, func(i, j int) bool {
-		return itemArray[i].frequency > itemArray[j].frequency
+	sort.Slice(h.freq, func(i, j int) bool {
+		return h.freq[i].frequency > h.freq[j].frequency
 	})
-	h.freq = itemArray
 }
 
 type cardFreq struct {
@@ -103,7 +97,6 @@ type cardFreq struct {
 type handType int
 
 func process(input []string) int {
-
 	var hands []hand
 	for _, line := range input {
 		items := strings.Fields(line)
@@ -113,8 +106,6 @@ func process(input []string) int {
 			bid:   bid,
 		})
 	}
-
-	// Sort the slice
 	sort.Slice(hands, func(i, j int) bool {
 		// If they are the same hand, then compare highest card.
 		if hands[i].Type() == hands[j].Type() {
@@ -128,13 +119,10 @@ func process(input []string) int {
 
 		return hands[i].Type() > hands[j].Type()
 	})
-
 	total := 0
-
 	for i, h := range hands {
 		fmt.Println("Hand: ", h.cards, " Bid: ", h.bid, " Type: ", h.Type(), " Rank: ", i+1)
 		total += h.bid * (i + 1)
 	}
-
 	return total
 }
