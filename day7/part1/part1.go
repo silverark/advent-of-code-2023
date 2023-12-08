@@ -107,7 +107,7 @@ func process(input []string) int {
 		})
 	}
 	sort.Slice(hands, func(i, j int) bool {
-		// If they are the same hand, then compare highest card.
+		// If they are the same hand, then compare the highest card.
 		if hands[i].Type() == hands[j].Type() {
 			for card := 0; card < len(hands[i].cards); card++ {
 				if cardVal[hands[i].cards[card]] == cardVal[hands[j].cards[card]] {
@@ -116,7 +116,6 @@ func process(input []string) int {
 				return cardVal[hands[i].cards[card]] < cardVal[hands[j].cards[card]]
 			}
 		}
-
 		return hands[i].Type() > hands[j].Type()
 	})
 	total := 0
