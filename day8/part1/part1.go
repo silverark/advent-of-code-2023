@@ -36,6 +36,5 @@ func process(input []string) int {
 			i = -1
 		}
 	}
-
 	return counter
 }

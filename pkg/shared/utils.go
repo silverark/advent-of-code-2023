@@ -7,3 +7,10 @@ func Reverse(s string) string {
 	}
 	return string(runes)
 }
+
+func abs(x int) int {
+	if x < 0 {
+		return -x
+	}
+	return x
+}
