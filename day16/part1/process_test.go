@@ -8,7 +8,7 @@ import (
 
 func TestProcess(t *testing.T) {
 	value := process(file.GetFile("../input_test.txt"))
-	expect := 405
+	expect := 46
 	if value != expect {
 		t.Fatalf("Received %v, but expected %v", value, expect)
 	}
