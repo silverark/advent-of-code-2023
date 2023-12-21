@@ -1,7 +1,6 @@
-package part1
+package part2
 
 import (
-	"log"
 	"slices"
 	"strings"
 )
@@ -62,24 +61,25 @@ func (m *ModuleFlipFlop) ProcessPulse(pulse *Pulse) []*Pulse {
 
 type ModuleConjunction struct {
 	ModuleBase
-	lastReceived map[string]bool
+	LastReceived map[string]bool
+	Cycle        int
 }
 
 func (m *ModuleConjunction) ProcessPulse(pulse *Pulse) []*Pulse {
 	var pulses []*Pulse
-	if m.lastReceived == nil {
-		m.lastReceived = make(map[string]bool)
+	if m.LastReceived == nil {
+		m.LastReceived = make(map[string]bool)
 		// Add each input
 		for _, module := range modules {
 			if slices.Contains(module.GetDestinations(), m.name) {
-				m.lastReceived[module.GetName()] = false
+				m.LastReceived[module.GetName()] = false
 			}
 		}
 	}
-	m.lastReceived[pulse.from] = pulse.pulseType
+	m.LastReceived[pulse.from] = pulse.pulseType
 
 	allHigh := true
-	for _, value := range m.lastReceived {
+	for _, value := range m.LastReceived {
 		if value == false {
 			allHigh = false
 			break
@@ -117,8 +117,8 @@ func (m *ModuleBroadcast) ProcessPulse(pulse *Pulse) []*Pulse {
 
 func process(input []string) int {
 
-	highCount := 0
-	lowCount := 0
+	var moduleVd *ModuleConjunction
+	rxDownstream := make(map[string]*ModuleConjunction)
 
 	modules = make(map[string]Module)
 	for _, line := range input {
@@ -135,6 +135,15 @@ func process(input []string) int {
 			newModule.name = name
 			newModule.destinations = getDestinations(parts[1])
 			modules[newModule.name] = newModule
+
+			// Set VD to keep track of the cycle, and it's downstream (upstream?) modules
+			if name == "vd" {
+				moduleVd = newModule
+			}
+			if slices.Contains(newModule.destinations, "vd") {
+				rxDownstream[newModule.name] = newModule
+			}
+
 		case 'b': // Broadcast
 			newModule := &ModuleBroadcast{}
 			newModule.name = "broadcaster"
@@ -143,7 +152,8 @@ func process(input []string) int {
 		}
 	}
 
-	for i := 0; i < 1000; i++ {
+	i := 0
+	for {
 		var pulses []*Pulse
 
 		// Push button
@@ -154,27 +164,41 @@ func process(input []string) int {
 		})
 
 		// Process all the pulses.
-		for i := 0; i < len(pulses); i++ {
-			module, found := modules[pulses[i].to]
+		for j := 0; j < len(pulses); j++ {
+			module, found := modules[pulses[j].to]
 			if found == false {
 				continue
 			}
-			newPulses := module.ProcessPulse(pulses[i])
+
+			// See if the module is downstream of rx
+			if pulses[j].pulseType == true {
+				foundAll := true
+				for _, mod := range rxDownstream {
+					//log.Println("rx downstream", mod.GetName())
+					if mod.Cycle == 0 && moduleVd.LastReceived[mod.name] == true {
+						mod.Cycle = i + 1
+					}
+					if mod.Cycle == 0 {
+						foundAll = false
+					}
+				}
+				if foundAll == true {
+					cycles := make([]int, 0)
+					for _, mod := range rxDownstream {
+						cycles = append(cycles, mod.Cycle)
+					}
+					totalButtonPresses := LCM(cycles[0], cycles[1], cycles[2:]...)
+					return totalButtonPresses
+				}
+			}
+			newPulses := module.ProcessPulse(pulses[j])
 			pulses = append(pulses, newPulses...)
 		}
-		for _, pulse := range pulses {
-			if pulse.pulseType == true {
-				highCount++
-			} else {
-				lowCount++
-			}
-		}
 
+		i++
 	}
 
-	log.Println("High count", highCount, "Low count", lowCount)
-
-	return highCount * lowCount
+	return 0
 }
 
 func getDestinations(input string) []string {
@@ -185,4 +209,23 @@ func getDestinations(input string) []string {
 		fields[i] = strings.TrimSpace(fields[i])
 	}
 	return fields
+}
+
+// GCD (greatest common divisor) via Euclidean algorithm
+func GCD(a, b int) int {
+	for b != 0 {
+		t := b
+		b = a % b
+		a = t
+	}
+	return a
+}
+
+// LCM (Least Common Multiple) via GCD
+func LCM(a, b int, integers ...int) int {
+	result := a * b / GCD(a, b)
+	for i := 0; i < len(integers); i++ {
+		result = LCM(result, integers[i])
+	}
+	return result
 }

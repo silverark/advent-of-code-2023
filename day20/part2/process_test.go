@@ -1,4 +1,4 @@
-package part1
+package part2
 
 import (
 	"log"
@@ -22,5 +22,11 @@ func TestProcessTest2(t *testing.T) {
 }
 func TestProcessActual(t *testing.T) {
 	value := process(file.GetFile("../input.txt"))
+	if value <= 3563520605040 {
+		log.Fatalf("Received %v, but expected a higher value", value)
+	}
+	if value != 228300182686739 {
+		log.Fatalf("Received %v, but expected %v", value, 228300182686739)
+	}
 	log.Println("The answer is", value)
 }
