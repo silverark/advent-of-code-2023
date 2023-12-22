@@ -1,5 +1,7 @@
 package shared
 
+import "strconv"
+
 func Reverse(s string) string {
 	runes := []rune(s)
 	for i, j := 0, len(runes)-1; i < j; i, j = i+1, j-1 {
@@ -13,4 +15,9 @@ func abs(x int) int {
 		return -x
 	}
 	return x
+}
+
+func Atoi(s string) int {
+	intValue, _ := strconv.Atoi(s)
+	return intValue
 }
