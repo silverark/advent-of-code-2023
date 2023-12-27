@@ -47,7 +47,6 @@ func stack(bricks []Brick) int {
 				break
 			}
 			moves[i]++
-			bricks[i] = newBrick
 		}
 	}
 	return len(moves)
@@ -82,10 +81,10 @@ func process(input []string) int {
 	// Now take each brick out, and see it if it was supporting anything
 	noneSupportingBricks := 0
 	for i := 0; i < len(bricks); i++ {
-		stackCopy := make([]Brick, len(bricks))
-		copy(stackCopy, bricks)
-		stackCopy = append(stackCopy[:i], stackCopy[i+1:]...)
-		changes := stack(stackCopy)
+		brickCpy := bricks[i]
+		bricks[i] = Brick{}
+		changes := stack(bricks)
+		bricks[i] = brickCpy
 		if changes == 0 {
 			noneSupportingBricks++
 		}
