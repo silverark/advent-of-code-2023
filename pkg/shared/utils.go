@@ -1,6 +1,9 @@
 package shared
 
-import "strconv"
+import (
+	"log"
+	"strconv"
+)
 
 func Reverse(s string) string {
 	runes := []rune(s)
@@ -18,6 +21,9 @@ func abs(x int) int {
 }
 
 func Atoi(s string) int {
-	intValue, _ := strconv.Atoi(s)
+	intValue, err := strconv.Atoi(s)
+	if err != nil {
+		log.Panicln("Unable to parse an int: ", err)
+	}
 	return intValue
 }
